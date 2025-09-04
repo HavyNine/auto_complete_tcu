@@ -1,0 +1,24 @@
+
+body {
+    font-family: 'Inter', sans-serif;
+    overflow: hidden; /* Evita scrollbars desnecessárias no corpo */
+}
+
+main {
+    scrollbar-width: thin; /* Para Firefox */
+    scrollbar-color: #a0aec0 #edf2f7; /* Para Firefox */
+}
+
+main::-webkit-scrollbar {
+    width: 8px;
+}
+
+main::-webkit-scrollbar-track {
+    background: #edf2f7;
+}
+
+main::-webkit-scrollbar-thumb {
+    background-color: #a0aec0;
+    border-radius: 10px;
+    border: 3px solid #edf2f7;
+}
