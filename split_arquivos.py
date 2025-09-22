@@ -77,7 +77,7 @@ def dividir_csv_grandes(pasta_entrada, tamanho_maximo_mb=90):
                 print(f"  -> ERRO ao processar o arquivo '{nome_arquivo}': {e}")
 
 
-# --- Como Usar ---
+
 if __name__ == '__main__':
     caminho_da_pasta = './'
     # Usar um valor ligeiramente menor que 100 dá uma margem de segurança

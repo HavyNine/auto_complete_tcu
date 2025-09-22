@@ -2,17 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import chromadb
 from chromadb.utils import embedding_functions
-from waitress import serve # Importa o servidor Waitress
+from waitress import serve
 
-# --- CONFIGURAÇÃO ---
+
 COLLECTION_NAME = "normativos_collection"
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
-# --- FIM DA CONFIGURAÇÃO ---
+
 
 app = Flask(__name__)
 CORS(app) 
 
-# Inicializa o cliente do ChromaDB e a função de embedding (código inalterado)
+# Inicializa o cliente do ChromaDB e a função de embedding
 collection = None
 try:
     print("Iniciando o servidor e carregando a base de dados vetorial...")
@@ -32,7 +32,7 @@ except Exception as e:
     print(f"--- ERRO CRÍTICO AO CARREGAR A COLEÇÃO ---")
     print(f"  -> Erro: {e}")
 
-# Rota de busca (código inalterado)
+
 @app.route('/search', methods=['POST'])
 def search():
     if not collection:
@@ -69,7 +69,7 @@ def search():
         print(f"Erro durante a query: {e}")
         return jsonify({"error": f"Ocorreu um erro durante a busca: {e}"}), 500
 
-# MUDANÇA: Usamos 'serve' do Waitress em vez de 'app.run'
+
 if __name__ == '__main__':
     print(f"Iniciando o servidor de backend na porta 5000 com Waitress...")
     serve(app, host='127.0.0.1', port=5000)
