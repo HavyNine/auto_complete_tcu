@@ -52,7 +52,6 @@ async function findSuggestionsWithIA(text, apiKey, showLoading, hideLoading, ren
     });
 
     if (!geminiResponse.ok) {
-        // Se a API do Gemini falhar, lança um erro
         throw new Error(`Erro na API do Gemini: ${geminiResponse.statusText}`);
     }
 

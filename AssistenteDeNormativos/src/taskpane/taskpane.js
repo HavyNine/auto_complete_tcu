@@ -31,7 +31,7 @@ async function findSuggestions(text, apiKey) {
 }
 
 // --- LÓGICAS DE BUSCA ---
-// CORREÇÃO: Lógica de busca por palavra-chave com sistema de pontuação para relevância.
+// Lógica de busca por palavra-chave com sistema de pontuação para relevância.
 function findSuggestionsWithKeywords(text) {
     const lowerCaseText = text.toLowerCase();
     console.log('Buscando por palavras-chave no texto:', `"${lowerCaseText.substring(0, 100)}..."`);
@@ -167,7 +167,7 @@ function renderSuggestions(suggestions) {
         </div>
     `).join('');
 
-    // Adiciona o event listener para os novos botões de inserção
+    // Event listener para os novos botões de inserção
     document.querySelectorAll('.insert-title-btn').forEach(button => {
         button.onclick = () => {
             const titleToInsert = unescape(button.dataset.title);
