@@ -1,67 +1,69 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF--8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistente de Normativos</title>
-
-    <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
-
-    <!-- Tailwind CSS e Fontes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    
+    <!-- Carrega a fonte Inter do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Carrega o Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carrega a biblioteca do Office.js -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    
+    <!-- Carrega os nossos scripts locais -->
+    <script type="text/javascript" src="gemini-logic.js" defer></script>
+    <script type="text/javascript" src="taskpane.js" defer></script>
+    
+    <!-- Carrega a nossa folha de estilos local -->
+    <link rel="stylesheet" href="taskpane.css">
+</head>
+<body class="bg-gray-900 text-white font-sans flex flex-col h-screen">
 
-    <!-- Estilos Personalizados -->
-    <link href="taskpane.css" rel="stylesheet" type="text/css" />
-  </head>
+    <header class="p-4 border-b border-gray-700 shadow-md">
+        <h1 class="text-xl font-bold text-center text-blue-400">Assistente de Normativos</h1>
+    </header>
 
-  <body class="bg-gray-50 font-sans antialiased">
-    <div id="app-body" class="flex flex-col h-screen">
-      <!-- Cabeçalho -->
-      <header class="p-4 border-b bg-white shadow-sm">
-        <h1 class="text-lg font-bold text-gray-800">Assistente de Normativos</h1>
-        <p class="text-sm text-gray-500">Sugestões baseadas no contexto do seu texto.</p>
-      </header>
-      
-      <!-- Controles e Configurações -->
-      <div class="p-4 bg-gray-100 border-b">
-        <!-- Seletor de Modo -->
-        <div>
-          <label for="suggestion-mode" class="block text-sm font-medium text-gray-700 mb-2">Modo de Análise</label>
-          <select id="suggestion-mode" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-            <option value="keyword">Busca por Palavra-Chave</option>
-            <option value="gemini">Análise com IA (Gemini)</option>
-          </select>
-        </div>
-        <!-- Campo da Chave de API -->
-        <div id="gemini-api-key-container" class="mt-4 hidden">
-           <label for="gemini-api-key" class="block text-sm font-medium text-gray-700">Chave de API - Gemini</label>
-           <input type="password" id="gemini-api-key" placeholder="Cole sua chave de API aqui" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-           <p class="mt-1 text-xs text-gray-500">Sua chave é salva localmente no seu navegador.</p>
-        </div>
-      </div>
+    <main class="flex-grow p-4 space-y-4 overflow-y-hidden flex flex-col">
+        
+        <!-- Painel de Configurações -->
+        <div id="controls" class="space-y-4">
+            <div>
+                <label for="apiKeyInput" class="block text-sm font-medium text-gray-300 mb-1">Chave da API do Gemini</label>
+                <input type="password" id="apiKeyInput" class="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Cole sua chave de API aqui">
+            </div>
 
-      <!-- Corpo Principal (Sugestões) -->
-      <main class="flex-grow p-4 overflow-y-auto">
-        <div id="loading-spinner" class="text-center hidden">
-            <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="text-sm text-gray-600 mt-2">Analisando contexto com IA...</p>
+            <div>
+                <label for="metodoBusca" class="block text-sm font-medium text-gray-300 mb-1">Método de Análise</label>
+                <select id="metodoBusca" class="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="ia">Análise com IA (Recomendado)</option>
+                    <option value="keyword">Busca por Palavra-Chave</option>
+                </select>
+            </div>
         </div>
-        <div id="suggestions-container">
-          <!-- As sugestões serão inseridas aqui -->
+
+        <!-- Botão de Ação Principal -->
+        <button id="analisarBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500">
+            Analisar Parágrafo Atual
+        </button>
+
+        <hr class="border-gray-700">
+
+        <!-- Área de Sugestões -->
+        <div class="flex-grow overflow-y-auto pr-2 space-y-3">
+            <h2 class="text-lg font-semibold text-gray-200">Sugestões</h2>
+            <div id="suggestions" class="space-y-2">
+                <p class="p-4 text-gray-500 text-center">Clique no botão acima para analisar o parágrafo selecionado no documento.</p>
+            </div>
         </div>
-        <div id="message-container" class="text-center text-gray-500 mt-8">
-          <p>Digite no documento para ver as sugestões.</p>
-        </div>
-      </main>
-    </div>
-  </body>
+        
+    </main>
+
+</body>
 </html>
 
