@@ -101,3 +101,126 @@ Na versão atual, apenas o servidor do frontend (suplemento) é necessário.
 2.  Vá ao menu **Suplementos > MEUS SUPLEMENTOS**.
 3.  Clique em **"Carregar o Meu Suplemento"** e selecione o local do projeto e selecione `manifest.xml` localizado na pasta `AssistenteDeNormativos`.
 4.  O "Assistente de Normativos" irá aparecer no painel lateral.
+
+
+
+
+
+# Guia de Implantação: Suplemento do Word "Assistente de Normativos" em Ambiente de Produção
+
+## Etapa 1: Preparação do Ambiente de Produção
+
+Antes de publicar, precisamos ajustar algumas configurações nos seus arquivos para que apontem para os endereços corretos na internet, em vez dos endereços locais de desenvolvimento.
+
+### 1.1. Configurar a URL de Produção do Frontend
+
+**Arquivo para editar:** `Projeto Final/AssistenteDeNormativos/webpack.config.js`
+
+**O que fazer:**
+
+Localize a linha que define `urlProd` e substitua `"https://www.contoso.com/"` pela URL real onde os arquivos do seu suplemento ficarão hospedados. Lembre-se que a URL deve ser HTTPS.
+
+```js
+// Linha original
+const urlProd = "https://www.contoso.com/";
+
+// Exemplo de como deve ficar
+const urlProd = "https://sua-empresa.com/suplemento-normativos/";
+
+```
+
+### 1.2. Configurar a URL de Produção do Backend
+
+Seu suplemento precisa se comunicar com o servidor Python para usar a busca com IA. Vamos atualizar o endereço desse servidor.
+
+**Arquivo para editar:**  
+`./AssistenteDeNormativos/src/taskpane/gemini-logic.js`
+
+**O que fazer:**  
+Encontre a linha que contém o endereço `http://127.0.0.1:5000/search` e altere para a URL pública onde seu backend Python será hospedado.
+
+```javascript
+// Linha original
+const response = await fetch('http://127.0.0.1:5000/search', { /* ... */ });
+
+// Exemplo de como deve ficar
+const response = await fetch('https://api.sua-empresa.com/buscar-normativos', { /* ... */ });
+```
+
+---
+
+### 1.3. Gerar os Arquivos Finais para Produção
+
+Agora que as configurações estão corretas, vamos gerar a versão final e otimizada do seu suplemento.
+
+**Ação:**  
+Abra o terminal, navegue até a pasta `Projeto Final/AssistenteDeNormativos` e execute o seguinte comando:
+
+```bash
+npm run build
+```
+
+**Resultado:**  
+Este comando criará uma pasta chamada `dist`. Dentro dela, estarão todos os arquivos do seu suplemento, prontos para serem publicados na web.
+
+---
+
+## Etapa 2: Hospedagem da Aplicação
+
+Com os arquivos prontos, o próximo passo é colocá-los em servidores acessíveis pela internet.
+
+### 2.1. Hospedar o Frontend (Arquivos da pasta dist)
+
+Os arquivos da pasta `dist` (HTML, CSS, JS, imagens) precisam ser hospedados em um servidor web.
+
+**O que fazer:**  
+Faça o upload de todo o conteúdo da pasta `dist` para um serviço de hospedagem estática.
+
+
+> **Importante:** A URL que você receber do serviço de hospedagem deve ser a mesma que você configurou no passo 1.1.
+
+---
+
+### 2.2. Hospedar o Backend (Servidor Python)
+
+Seu servidor `backend_server.py` precisa ser executado em um ambiente que suporte Python.
+
+**O que fazer:**  
+Implante seu servidor Python e a base de dados vetorial (`normativos_db`) em um serviço de hospedagem de aplicações.
+
+
+> **Importante:** A URL que você receber para sua API deve ser a mesma que você configurou no passo 1.2.
+
+---
+
+## Etapa 3: Implantação do Manifesto
+
+O `manifest.xml` é o arquivo que diz ao Microsoft 365 como encontrar e carregar seu suplemento.
+
+### 3.1. Disponibilizar o Arquivo manifest.xml
+
+O arquivo `manifest.xml` gerado dentro da pasta `dist` já está configurado com as URLs de produção. Ele precisa estar acessível publicamente via **HTTPS**. A maneira mais fácil é hospedá-lo junto com os outros arquivos do frontend (passo 2.1).
+
+**URL de Exemplo:**  
+`https://sua-empresa.com/suplemento-normativos/manifest.xml`
+
+---
+
+### 3.2. Publicar o Suplemento para os Usuários
+
+Para que as pessoas na sua organização possam usar o suplemento, um administrador do Microsoft 365 precisa adicioná-lo ao catálogo central de suplementos.
+
+**Passos para o Administrador:**
+1. Acesse o **Centro de administração do Microsoft 365**.
+2. Navegue até **Configurações > Aplicativos integrados**.
+3. Clique na opção **Carregar aplicativos personalizados**.
+4. Escolha uma das opções:
+   - **Fornecer link para o arquivo de manifesto:** Insira a URL pública do seu `manifest.xml`. *(Recomendado)*
+   - **Carregar arquivo de manifesto (.xml) do computador):** Faça o upload do arquivo `manifest.xml` da sua pasta `dist`.
+5. Siga as instruções para definir quem terá acesso ao suplemento (usuários específicos, grupos ou toda a organização).
+
+---
+
+**Resultado Final:**  
+Depois de concluído, o suplemento **"Assistente de Normativos"** aparecerá na guia **"Página Inicial"** do Word para os usuários selecionados.
+
