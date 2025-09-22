@@ -16,7 +16,7 @@ O sistema é dividido em duas partes principais que trabalham em conjunto:
 
 * **Busca por Palavra-Chave:** Um sistema de pontuação inteligente que encontra correspondências exatas de frases-chave, priorizando as mais longas e específicas para garantir alta relevância e mostrando apenas os 10 resultados mais fortes.
 * **Análise com IA (Evolução Futura):** A arquitetura do projeto já está preparada para uma futura integração com IA. O plano é utilizar o servidor local para encontrar os normativos mais relevantes semanticamente e, em seguida, enviar essa lista para a API do Gemini para uma seleção final e contextualizada. **Esta funcionalidade não está ativa na versão atual.**
-* **Interface Interativa:** As sugestões são apresentadas em formato de acordeão (toggle), permitindo ao usuário visualizar o texto completo do normativo sem poluir a interface.
+* **Interface Interativa:** As sugestões são apresentadas em formato de caixa expansiva (toggle), permitindo ao usuário visualizar o texto completo do normativo sem poluir a interface.
 * **Inserção Simplificada:** Com um clique, o usuário pode inserir apenas o título do normativo no documento, mantendo o relatório limpo.
 * **Processamento de Dados:** Inclui scripts para converter e limpar múltiplos arquivos `.csv` numa base de conhecimento unificada em formato `.json`.
 
