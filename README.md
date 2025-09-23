@@ -106,7 +106,7 @@ Na versão atual, apenas o servidor do frontend (suplemento) é necessário.
 
 
 
-# Guia de Implantação: Suplemento do Word "Assistente de Normativos" em Ambiente de Produção
+# Guia de Implantação em Ambiente de Produção
 
 ## Etapa 1: Preparação do Ambiente de Produção
 
